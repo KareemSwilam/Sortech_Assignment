@@ -1,4 +1,9 @@
 
+using Microsoft.OpenApi;
+using Sortech_Assignment.Application.DependencyInjection;
+using Sortech_Assignment.Infrastructure.DependencyInjection;
+using Sortech_Assignment.Infrastructure.ExternalCalling.IPgeoLocation;
+
 namespace Sortech_Assignment
 {
     public class Program
@@ -10,15 +15,28 @@ namespace Sortech_Assignment
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            builder.Services.AddInfrastructureDI();
+            builder.Services.AddApplicationDI();
+            builder.Services.AddHttpClient();   
+            builder.Services.Configure<IPgeoLocationSetting>(builder.Configuration.GetSection(IPgeoLocationSetting.Name));
+            
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "API",
+                    Version = "v1"
+                });
+            });
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
+
             }
 
             app.UseHttpsRedirection();
