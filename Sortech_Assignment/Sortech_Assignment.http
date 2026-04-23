@@ -1,0 +1,6 @@
+@Sortech_Assignment_HostAddress = http://localhost:5117
+
+GET {{Sortech_Assignment_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
