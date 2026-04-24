@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sortech_Assignment.Infrastructure.ExternalCalling.IPgeoLocation
 {
-    public class APIResponse: List<Class1>
+    public class RestCountriesResponse: List<Class1>
     {
         
     }

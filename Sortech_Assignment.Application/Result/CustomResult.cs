@@ -16,12 +16,7 @@ namespace Sortech_Assignment.Application.Result
         private T? _result { get; set; }
         public T? Result
         {
-            get
-            {
-                if (IsFailure)
-                    throw new InvalidOperationException("Cannot access result of a failed operation.");
-                return _result;
-            }
+            get => IsSuccess ? _result : default;
             private init { _result = value; }
         }
         private CustomResult(T value)

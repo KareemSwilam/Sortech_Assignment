@@ -64,6 +64,14 @@ namespace Sortech_Assignment.Application.Services
             return CustomResult<List<Country>>.Success(countries);
         }
 
+        public async  Task<CustomResult<Country>> GetCountryByIPAdress(string? ipAddress)
+        {
+            var country = await _locationServices.GetCountryByIPAdress(ipAddress);
+            if (country == null)
+                return CustomResult<Country>.Failure(CustomError.NotFound(new List<string> { "Country not found for the provided IP address" }));
+            return CustomResult<Country>.Success(country);
+        }
+
         public async Task<CustomResult> RemoveBlockedCoutry(string coutryCode)
         {
             var countryBlocked = _unit.BlockCountryRepository.GetBlockedCountry(coutryCode);

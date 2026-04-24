@@ -10,5 +10,6 @@ namespace Sortech_Assignment.Application.IServices
     public interface ILocationServices
     {
         public Task<Country> GetCountryByCode(string code);
+        public Task<Country> GetCountryByIPAdress(string? ipAddress = null);
     }
 }

@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
 using Sortech_Assignment.Application.IServices;
 using Sortech_Assignment.Application.Services;
+using Sortech_Assignment.Application.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,8 @@ namespace Sortech_Assignment.Application.DependencyInjection
         public static IServiceCollection AddApplicationDI(this IServiceCollection services)
         {
             services.AddScoped<ICountryServices, CountryServices>();
+            services.AddScoped(typeof(ValidationFilter<>));
+            services.AddValidatorsFromAssemblyContaining<IPLockupDtoValidator>();
             return services;
         }
     }

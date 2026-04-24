@@ -18,6 +18,7 @@ namespace Sortech_Assignment
             builder.Services.AddInfrastructureDI();
             builder.Services.AddApplicationDI();
             builder.Services.AddHttpClient();   
+            builder.Services.AddHttpContextAccessor();
             builder.Services.Configure<IPgeoLocationSetting>(builder.Configuration.GetSection(IPgeoLocationSetting.Name));
             
             builder.Services.AddSwaggerGen(options =>
