@@ -1,8 +1,11 @@
-﻿using Sortech_Assignment.Application.Dtos.CountryDtos;
+﻿using Sortech_Assignment.Application.Common;
+using Sortech_Assignment.Application.Dtos.CountryDtos;
 using Sortech_Assignment.Application.IServices;
 using Sortech_Assignment.Application.Result;
 using Sortech_Assignment.Domain.IRepository;
 using Sortech_Assignment.Domain.Models;
+using Sortech_Assignment.Domain.ValueObject;
+using System.Collections.Generic;
 
 namespace Sortech_Assignment.Application.Services
 {
@@ -71,7 +74,7 @@ namespace Sortech_Assignment.Application.Services
             return CustomResult<string>.Success("Country is not blocked");
         }
 
-        public async Task<CustomResult<List<Country>>> GetAllCountry(CountryPaginationParams @params)
+        public async Task<CustomResult<PaginationResult<Country>>> GetAllCountry(CountryPaginationParams @params)
         {
             if (!string.IsNullOrEmpty(@params.Search))
             {
@@ -81,20 +84,19 @@ namespace Sortech_Assignment.Application.Services
                     var Countries = _unit.BlockCountryRepository.GetBlockedCountryList(c => c.Cca2.Equals(@params.Search, StringComparison.OrdinalIgnoreCase) ||
                                                                                        c.Cca3.Equals(@params.Search, StringComparison.OrdinalIgnoreCase),
                                                                                        @params.PageNumber, @params.PageSize);
-                    if (Countries.Count() > 0)
-                        return CustomResult<List<Country>>.Success(Countries);
+                    return CustomResult<PaginationResult<Country>>.Success(Countries);
 
                 }
                 var CountriesNameSearch = _unit.BlockCountryRepository.GetBlockedCountryList(c => c.CommenName.Contains(@params.Search, StringComparison.OrdinalIgnoreCase) ||
                                                                                         c.OfficialName.Contains(@params.Search, StringComparison.OrdinalIgnoreCase),
                                                                                        @params.PageNumber, @params.PageSize);
 
-                return CustomResult<List<Country>>.Success(CountriesNameSearch);
+                return CustomResult<PaginationResult<Country>>.Success(CountriesNameSearch);
 
 
             }
             var countries = _unit.BlockCountryRepository.GetBlockedCountryList(c => true, @params.PageNumber, @params.PageSize);
-            return CustomResult<List<Country>>.Success(countries);
+            return CustomResult<PaginationResult<Country>>.Success(countries);
         }
 
         public async Task<CustomResult<Country>> GetCountryByIPAdress(string? ipAddress)

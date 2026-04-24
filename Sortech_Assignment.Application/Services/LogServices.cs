@@ -3,6 +3,7 @@ using Sortech_Assignment.Application.IServices;
 using Sortech_Assignment.Application.Result;
 using Sortech_Assignment.Domain.IRepository;
 using Sortech_Assignment.Domain.Models;
+using Sortech_Assignment.Domain.ValueObject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,12 @@ namespace Sortech_Assignment.Application.Services
         {
             _unit = unit;
         }
-        public async Task<CustomResult<List<Log>>> GetAllLogs(LogPaginationParams @params)
+        public async Task<CustomResult<PaginationResult<Log>>> GetAllLogs(LogPaginationParams @params)
         {
             var result = _unit.LogRepository.GetLogs(l=> true , @params.PageNumber, @params.PageSize);
             if (result is null)
-                return CustomResult<List<Log>>.Failure(CustomError.NotFound(new List<string> { "No logs found" }));
-            return CustomResult<List<Log>>.Success(result); 
+                return CustomResult<PaginationResult<Log>>.Failure(CustomError.NotFound(new List<string> { "No logs found" }));
+            return CustomResult<PaginationResult<Log>>.Success(result); 
         }
     }
 }

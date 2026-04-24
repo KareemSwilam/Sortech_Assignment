@@ -1,5 +1,7 @@
-﻿    using Sortech_Assignment.Domain.IRepository;
+﻿using Sortech_Assignment.Application.Common;
+using Sortech_Assignment.Domain.IRepository;
 using Sortech_Assignment.Domain.Models;
+using Sortech_Assignment.Domain.ValueObject;
 using Sortech_Assignment.Infrastructure.Memory;
 using System;
 using System.Collections.Generic;
@@ -28,14 +30,17 @@ namespace Sortech_Assignment.Infrastructure.Repository
             return _context.BlockedCountry.TryGetValue(countryCode, out var country) ? country : null;
         }
 
-        public List<Country> GetBlockedCountryList(Func<Country, bool>? filter = null, int PageNumber = 1, int PageSize = 10)
+        public PaginationResult<Country> GetBlockedCountryList(Func<Country, bool>? filter = null, int PageNumber = 1, int PageSize = 10)
         {
             var query = _context.BlockedCountry.Values.AsQueryable();
+            
             if (filter != null)
             {
                 query = query.Where(filter).AsQueryable();
             }
-            return query.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToList();
+            var Count = query.Count();
+            var result = query.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToList();
+            return new PaginationResult<Country>(Count, PageNumber, PageSize, result);    
         }
 
         public bool IsBlocked(string countryCode)

@@ -1,4 +1,5 @@
-﻿using Sortech_Assignment.Domain.Models;
+﻿using Sortech_Assignment.Domain.ValueObject;
+using Sortech_Assignment.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Sortech_Assignment.Domain.IRepository
         public bool AddBlockedCountry(string countryCode , Country country);
         public bool RemoveBlockedCountry(string countryCode);
         public bool IsBlocked(string countryCode);
-        public List<Country> GetBlockedCountryList(Func<Country,bool>? filter = null, int PageNumber = 1, int PageSize = 10);
+        public PaginationResult<Country> GetBlockedCountryList(Func<Country,bool>? filter = null, int PageNumber = 1, int PageSize = 10);
         public Country GetBlockedCountry(string countryCode);
     }
 }
