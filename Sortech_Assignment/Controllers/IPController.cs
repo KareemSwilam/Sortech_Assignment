@@ -25,5 +25,13 @@ namespace Sortech_Assignment.Controllers
 
             return BadRequest(result);
         }
+        [HttpGet("check-block")]
+        public async Task<IActionResult> CheckBlock()
+        {
+            var result = await _countryServices.CheckBlock();
+            if (result.IsSuccess)
+                return Ok(result);
+            return BadRequest(result);
+        }
     }
 }

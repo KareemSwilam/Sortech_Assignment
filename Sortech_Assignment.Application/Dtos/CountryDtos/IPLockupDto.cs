@@ -8,6 +8,6 @@ namespace Sortech_Assignment.Application.Dtos.CountryDtos
 {
     public class IPLockupDto
     {
-        public string IPAddress { get; set; }   
+        public string? IPAddress { get; set; }   
     }
 }

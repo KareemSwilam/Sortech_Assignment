@@ -3,11 +3,6 @@ using Sortech_Assignment.Application.IServices;
 using Sortech_Assignment.Application.Result;
 using Sortech_Assignment.Domain.IRepository;
 using Sortech_Assignment.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sortech_Assignment.Application.Services
 {
@@ -38,24 +33,44 @@ namespace Sortech_Assignment.Application.Services
             return CustomResult.Success();
         }
 
+        public async Task<CustomResult<string>> CheckBlock()
+        {
+            var CountryByDto = await _locationServices.GetCountryByIPAdress();
+            if (CountryByDto == null)
+                return CustomResult<string>.Failure(CustomError.NotFound(new List<string> { "Failed To get Country" }));
+            var countryBlocked = _unit.BlockCountryRepository.GetBlockedCountry(CountryByDto.Country.Cca2);
+            var Log = new Log()
+            {
+                IPAddress = CountryByDto.IP,
+                Timestamp = DateTime.UtcNow,
+                CountryCode = CountryByDto.Country.Cca2,
+                BlockedStatus = !(countryBlocked is null),
+                UserAgent = CountryByDto.UserAgent
+            };
+            _unit.LogRepository.AddLog(Log);
+            if (countryBlocked != null)
+                return CustomResult<string>.Success("Country is blocked");
+            return CustomResult<string>.Success("Country is not blocked");
+        }
+
         public async Task<CustomResult<List<Country>>> GetAllCountry(CountryPaginationParams @params)
         {
-            if(!string.IsNullOrEmpty(@params.Search))
+            if (!string.IsNullOrEmpty(@params.Search))
             {
                 var IsCode = IsValidCountryCode(@params.Search);
-                if(IsCode)
+                if (IsCode)
                 {
                     var Countries = _unit.BlockCountryRepository.GetBlockedCountryList(c => c.Cca2.Equals(@params.Search, StringComparison.OrdinalIgnoreCase) ||
                                                                                        c.Cca3.Equals(@params.Search, StringComparison.OrdinalIgnoreCase),
                                                                                        @params.PageNumber, @params.PageSize);
-                    if(Countries.Count() > 0)
+                    if (Countries.Count() > 0)
                         return CustomResult<List<Country>>.Success(Countries);
 
                 }
                 var CountriesNameSearch = _unit.BlockCountryRepository.GetBlockedCountryList(c => c.CommenName.Contains(@params.Search, StringComparison.OrdinalIgnoreCase) ||
                                                                                         c.OfficialName.Contains(@params.Search, StringComparison.OrdinalIgnoreCase),
                                                                                        @params.PageNumber, @params.PageSize);
-               
+
                 return CustomResult<List<Country>>.Success(CountriesNameSearch);
 
 
@@ -64,12 +79,12 @@ namespace Sortech_Assignment.Application.Services
             return CustomResult<List<Country>>.Success(countries);
         }
 
-        public async  Task<CustomResult<Country>> GetCountryByIPAdress(string? ipAddress)
+        public async Task<CustomResult<Country>> GetCountryByIPAdress(string? ipAddress)
         {
-            var country = await _locationServices.GetCountryByIPAdress(ipAddress);
-            if (country == null)
+            var countryByIpDto = await _locationServices.GetCountryByIPAdress(ipAddress);
+            if (countryByIpDto == null)
                 return CustomResult<Country>.Failure(CustomError.NotFound(new List<string> { "Country not found for the provided IP address" }));
-            return CustomResult<Country>.Success(country);
+            return CustomResult<Country>.Success(countryByIpDto.Country);
         }
 
         public async Task<CustomResult> RemoveBlockedCoutry(string coutryCode)
@@ -97,7 +112,7 @@ namespace Sortech_Assignment.Application.Services
         {
             return !string.IsNullOrEmpty(countryCode) && (countryCode.Length == 2 || countryCode.Length == 3);
         }
-
     }
+
 
 }

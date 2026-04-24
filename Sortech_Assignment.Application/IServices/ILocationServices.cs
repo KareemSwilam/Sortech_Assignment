@@ -1,4 +1,5 @@
-﻿using Sortech_Assignment.Domain.Models;
+﻿using Sortech_Assignment.Application.Dtos.CountryDtos;
+using Sortech_Assignment.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace Sortech_Assignment.Application.IServices
     public interface ILocationServices
     {
         public Task<Country> GetCountryByCode(string code);
-        public Task<Country> GetCountryByIPAdress(string? ipAddress = null);
+        public Task<GetCountryByIPResponseDto> GetCountryByIPAdress(string? ipAddress = null);
     }
 }

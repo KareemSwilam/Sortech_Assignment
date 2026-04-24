@@ -16,6 +16,7 @@ namespace Sortech_Assignment.Application.DependencyInjection
         public static IServiceCollection AddApplicationDI(this IServiceCollection services)
         {
             services.AddScoped<ICountryServices, CountryServices>();
+            services.AddScoped<ILogServices, LogServices>();
             services.AddScoped(typeof(ValidationFilter<>));
             services.AddValidatorsFromAssemblyContaining<IPLockupDtoValidator>();
             return services;

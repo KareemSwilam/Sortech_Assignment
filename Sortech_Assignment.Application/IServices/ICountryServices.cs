@@ -15,6 +15,7 @@ namespace Sortech_Assignment.Application.IServices
         public Task<CustomResult> RemoveBlockedCoutry(string coutryCode);
         public Task<CustomResult<List<Country>>> GetAllCountry(CountryPaginationParams @params);
         public Task<CustomResult<Country>> GetCountryByIPAdress(string? ipAddress);
+        public Task<CustomResult<string>> CheckBlock();  
          
     }
 }

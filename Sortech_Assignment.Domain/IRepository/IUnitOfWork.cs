@@ -9,5 +9,6 @@ namespace Sortech_Assignment.Domain.IRepository
     public interface IUnitOfWork
     {
         IBlockCountryRepository BlockCountryRepository { get; }
+        ILogRepository LogRepository { get; }
     }
 }

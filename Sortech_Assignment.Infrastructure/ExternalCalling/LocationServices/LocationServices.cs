@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Sortech_Assignment.Application.Dtos.CountryDtos;
 using Sortech_Assignment.Application.IServices;
 using Sortech_Assignment.Domain.Models;
 using Sortech_Assignment.Infrastructure.ExternalCalling.LocationServices;
@@ -47,28 +48,54 @@ namespace Sortech_Assignment.Infrastructure.ExternalCalling.IPgeoLocation
                 return null;    
         }
 
-        public async Task<Country> GetCountryByIPAdress(string? ipAddress = null)
+        public async Task<GetCountryByIPResponseDto> GetCountryByIPAdress(string? ipAddress = null)
         {
             var url = $"{_settings.Value.BaseUrl}?apiKey={_settings.Value.Key}";
             
             if (!string.IsNullOrEmpty(ipAddress))
                 url += $"&ip={ipAddress}";
+            else
+            {
+                ipAddress = await GetUserIPAdress();
+                url += $"&ip={ipAddress}";  
+            }
             var response = await _httpClient.GetAsync(url);
+            var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString();
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<IPgeoLocationResponse>();
-                var Country = new Country
+                var dto = new GetCountryByIPResponseDto
                 {
-                    Cca2 = result.location.country_code2,
-                    Cca3 = result.location.country_code3,
-                    CommenName = result.location.country_name,
-                    OfficialName = result.location.country_name_official
+                    IP = ipAddress,
+                    UserAgent = userAgent,
+                    Country = new Country
+                    {
+                        Cca2 = result.location.country_code2,
+                        Cca3 = result.location.country_code3,
+                        CommenName = result.location.country_name,
+                        OfficialName = result.location.country_name_official
+                    }
                 };
-                return Country;
+                return dto;
             }
             return null;
         }
-        
+        private async Task<string> GetUserIPAdress()
+        {
+            var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+            if (ipAddress == "::1" || ipAddress == "127.0.0.1")
+            {
+                var response = await _httpClient.GetAsync("https://api.ipify.org?format=json");
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<IpifyResponse>();
+                    ipAddress = result.ip;
+                }
+            }
+            return ipAddress;
+        }
+
+
     }
 }
 

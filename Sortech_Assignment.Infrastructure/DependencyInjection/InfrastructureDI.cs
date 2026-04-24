@@ -19,6 +19,7 @@ namespace Sortech_Assignment.Infrastructure.DependencyInjection
             services.AddSingleton<InMemoryContext>();
             
             services.AddSingleton<IBlockCountryRepository, BlockCountryRepository>();
+            services.AddSingleton<ILogRepository, LogRepository>();
             services.AddSingleton<ILocationServices, LocationServices>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
             return services;
