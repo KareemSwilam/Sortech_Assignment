@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sortech_Assignment.Application.IServices;
 using Sortech_Assignment.Domain.IRepository;
+using Sortech_Assignment.Infrastructure.BackgroundServices;
 using Sortech_Assignment.Infrastructure.ExternalCalling.IPgeoLocation;
 using Sortech_Assignment.Infrastructure.Memory;
 using Sortech_Assignment.Infrastructure.Repository;
@@ -23,6 +24,7 @@ namespace Sortech_Assignment.Infrastructure.DependencyInjection
             services.AddSingleton<ILocationServices, LocationServices>();
             services.AddSingleton<ITemporalBlockedCountryRepository, TemporalBlockedCountryRepository>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
+            services.AddHostedService<RemoveExpireTemporalBlocksJob>();
             return services;
         }
     }
