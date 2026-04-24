@@ -13,7 +13,7 @@ namespace Sortech_Assignment.Domain.IRepository
         public bool AddBlockedCountry(string countryCode , Country country);
         public bool RemoveBlockedCountry(string countryCode);
         public bool IsBlocked(string countryCode);
-        public List<Country> GetBlockedCountryList(Func<Country,bool>? filter = null);
+        public List<Country> GetBlockedCountryList(Func<Country,bool>? filter = null, int PageNumber = 1, int PageSize = 10);
         public Country GetBlockedCountry(string countryCode);
     }
 }

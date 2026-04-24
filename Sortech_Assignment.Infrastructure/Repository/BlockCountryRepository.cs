@@ -28,11 +28,14 @@ namespace Sortech_Assignment.Infrastructure.Repository
             return _context.BlockedCountry.TryGetValue(countryCode, out var country) ? country : null;
         }
 
-        public List<Country> GetBlockedCountryList(Func<Country, bool>? filter = null)
+        public List<Country> GetBlockedCountryList(Func<Country, bool>? filter = null, int PageNumber = 1, int PageSize = 10)
         {
-            if(filter == null)
-                return _context.BlockedCountry.Values.ToList();
-            return _context.BlockedCountry.Values.Where(filter).ToList();
+            var query = _context.BlockedCountry.Values.AsQueryable();
+            if (filter != null)
+            {
+                query = query.Where(filter).AsQueryable();
+            }
+            return query.Skip((PageNumber - 1) * PageSize).Take(PageSize).ToList();
         }
 
         public bool IsBlocked(string countryCode)

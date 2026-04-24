@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Sortech_Assignment.Application.Dtos.CountryDtos;
 using Sortech_Assignment.Application.IServices;
 
 namespace Sortech_Assignment.Controllers
@@ -35,9 +36,9 @@ namespace Sortech_Assignment.Controllers
             return NotFound(result);
         }
         [HttpGet("blocked")]
-        public async Task<IActionResult> GetBlockedCountries()
+        public async Task<IActionResult> GetBlockedCountries([FromQuery] CountryPaginationParams @params)
         {
-            var result = await _country.GetAllCountry();
+            var result = await _country.GetAllCountry(@params);
             if (result.IsSuccess)
             {
                 return Ok(result);

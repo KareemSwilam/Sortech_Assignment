@@ -1,4 +1,5 @@
-﻿using Sortech_Assignment.Application.Result;
+﻿using Sortech_Assignment.Application.Dtos.CountryDtos;
+using Sortech_Assignment.Application.Result;
 using Sortech_Assignment.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,6 @@ namespace Sortech_Assignment.Application.IServices
     {
         public Task<CustomResult> AddBlockedCoutry(string coutryCode);
         public Task<CustomResult> RemoveBlockedCoutry(string coutryCode);
-        public Task<CustomResult<List<Country>>> GetAllCountry();
+        public Task<CustomResult<List<Country>>> GetAllCountry(CountryPaginationParams @params);
     }
 }
