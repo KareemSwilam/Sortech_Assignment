@@ -11,6 +11,7 @@ namespace Sortech_Assignment.Infrastructure.Memory
     public class InMemoryContext
     {
         public ConcurrentDictionary<string, Country> BlockedCountry { get; set; } = new();
+        public ConcurrentDictionary<string, DateTime> TemporarilyBlockedCountry { get; set; } = new();
         public List<Log> Logs { get; set; } = new List<Log>();  
     }
 }

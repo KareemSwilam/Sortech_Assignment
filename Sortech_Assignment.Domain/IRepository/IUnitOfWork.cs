@@ -10,5 +10,6 @@ namespace Sortech_Assignment.Domain.IRepository
     {
         IBlockCountryRepository BlockCountryRepository { get; }
         ILogRepository LogRepository { get; }
-    }
+        ITemporalBlockedCountryRepository TemporalBlockedCountryRepository { get; }
+}
 }

@@ -19,6 +19,7 @@ namespace Sortech_Assignment.Application.DependencyInjection
             services.AddScoped<ILogServices, LogServices>();
             services.AddScoped(typeof(ValidationFilter<>));
             services.AddValidatorsFromAssemblyContaining<IPLockupDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<TemporalBlockedCountryDtoValidator>();
             return services;
         }
     }

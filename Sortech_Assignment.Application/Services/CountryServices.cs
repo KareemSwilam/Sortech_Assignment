@@ -33,6 +33,24 @@ namespace Sortech_Assignment.Application.Services
             return CustomResult.Success();
         }
 
+        public async Task<CustomResult> AddTemporalBlockedCountry(TemporalBlockedCountryDto dto)
+        {
+            var countryBlocked = _unit.BlockCountryRepository.GetBlockedCountry(dto.CountryCode);
+            if (countryBlocked != null)
+                return CustomResult.Failure(CustomError.ValidationError(new List<string> { "Country is already blocked" }));
+            var counrty = await _locationServices.GetCountryByCode(dto.CountryCode);
+            if (counrty == null)
+                return CustomResult.Failure(CustomError.NotFound(new List<string> { "Country not found, Check country code you submitted" }));
+            var countryBlockedSecondCheck = _unit.BlockCountryRepository.GetBlockedCountry(counrty.Cca2);
+            if (countryBlockedSecondCheck != null)
+                return CustomResult.Failure(CustomError.ValidationError(new List<string> { "Country is already blocked" }));
+            var saveBlocked = _unit.BlockCountryRepository.AddBlockedCountry(counrty.Cca2, counrty);
+            var savedDuration = _unit.TemporalBlockedCountryRepository.AddTempBlockedCountry(counrty.Cca2, DateTime.UtcNow.AddMinutes(dto.DurationMinutes));
+            if (!saveBlocked || !savedDuration)
+                return CustomResult.Failure(CustomError.ServerError(new List<string> { "Failed to block the country temporarily" }));
+            return CustomResult.Success();
+        }
+
         public async Task<CustomResult<string>> CheckBlock()
         {
             var CountryByDto = await _locationServices.GetCountryByIPAdress();
